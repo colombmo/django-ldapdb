@@ -1,0 +1,28 @@
+version: "3.0"
+services:
+  limesurvey:
+    build:
+      context: lime-apache/
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    environment:
+      - DB_TYPE=pgsql
+      - DB_PORT=${SQL_PORT}
+      - DB_HOST=${SQL_HOST}
+      - DB_PASSWORD=${SQL_PASSWORD}
+      - DB_NAME=${SQL_DATABASE}
+      - DB_USERNAME=${SQL_USER}
+      - ADMIN_USER=admin
+      - ADMIN_NAME=Admin
+      - ADMIN_PASSWORD=example
+      - ADMIN_EMAIL=admin@example.com
+      - PUBLIC_URL=foobar.com
+    volumes:
+      - limesurvey:/var/www/html/upload/surveys
+    expose:
+      - 8080:8080
+    depends_on:
+      - db
+
+volumes:
+  limesurvey:

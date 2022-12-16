@@ -1,0 +1,57 @@
+version: '3.8'
+
+services:
+  django:
+    build: ./app
+    restart: unless-stopped
+    command: python manage.py runserver 0.0.0.0:8000
+    volumes:
+      - ./app/:/usr/src/app/
+    ports:
+      - ${DJANGO_PORT}:${DJANGO_PORT}
+    env_file:
+      - ./.env.dev
+    depends_on:
+      - db
+      - limesurvey
+      
+  limesurvey:
+    #image: docker.io/martialblog/limesurvey:latest
+    build:
+      context: lime-apache/
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    environment:
+      - DB_TYPE=pgsql
+      - DB_PORT=${SQL_PORT}
+      - DB_HOST=${SQL_HOST}
+      - DB_PASSWORD=${SQL_PASSWORD}
+      - DB_NAME=${SQL_DATABASE}
+      - DB_USERNAME=${SQL_USER}
+      - ADMIN_USER=admin
+      - ADMIN_NAME=Admin
+      - ADMIN_PASSWORD=example
+      - ADMIN_EMAIL=admin@example.com
+      - PUBLIC_URL=foobar.com
+    volumes:
+      - limesurvey:/var/www/html/upload/surveys
+    ports:
+      - ${LIME_PORT}:${LIME_PORT}
+    depends_on:
+      - db
+
+  db:
+    image: postgres:13.0-alpine
+    restart: unless-stopped
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/
+    environment:
+      - POSTGRES_USER=${SQL_USER}
+      - POSTGRES_DB=${SQL_DATABASE}
+      - POSTGRES_PASSWORD=${SQL_PASSWORD}
+    ports:
+      - ${SQL_PORT}:${SQL_PORT}
+
+volumes:
+  limesurvey:
+  postgres_data:

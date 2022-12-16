@@ -1,0 +1,16 @@
+limesurvey.localhost {
+	reverse_proxy swice_server_limesurvey_1:8080
+}
+
+django.localhost {
+	encode zstd gzip
+
+	handle_path /static/* {
+		root * /home/app/web/staticfiles
+		file_server
+	}
+
+	handle {
+		reverse_proxy swice_server_django_1:8000
+	}
+}
