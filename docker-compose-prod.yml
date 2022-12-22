@@ -17,6 +17,7 @@ services:
     depends_on:
       - db
       - limesurvey
+      - openldap
 
   # Limesurvey server TODO: REMOVE ADMIN PASSWORD!!
   limesurvey:
@@ -43,6 +44,7 @@ services:
       - 8080:8080
     depends_on:
       - db
+      - openldap
 
   # Postgre shared database
   db:
@@ -56,6 +58,19 @@ services:
       - POSTGRES_PASSWORD=${SQL_PASSWORD}
     expose:
       - 5432:5432
+  
+  # Open LDAP for login    
+  openldap:
+    image: bitnami/openldap:2
+    expose:
+      - 1389:1389
+    environment:
+      - LDAP_ADMIN_USERNAME=${LDAP_ADMIN_USER}
+      - LDAP_ADMIN_PASSWORD=${LDAP_ADMIN_PASSWORD}
+      - LDAP_USERS=user01,user02
+      - LDAP_PASSWORDS=password1,password2
+    volumes:
+      - openldap_data:/bitnami/openldap
 
   # Caddy server for reverse proxy
   caddy:
@@ -74,10 +89,12 @@ services:
       - db
       - django
       - limesurvey
+      - openldap
 
 volumes:
   limesurvey:
   postgres_data:
+  openldap_data:
   static_volume:
   caddy_data:
     external: true

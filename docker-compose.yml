@@ -14,6 +14,7 @@ services:
     depends_on:
       - db
       - limesurvey
+      - openldap
       
   limesurvey:
     #image: docker.io/martialblog/limesurvey:latest
@@ -39,6 +40,7 @@ services:
       - ${LIME_PORT}:${LIME_PORT}
     depends_on:
       - db
+      - openldap
 
   db:
     image: postgres:13.0-alpine
@@ -51,7 +53,20 @@ services:
       - POSTGRES_PASSWORD=${SQL_PASSWORD}
     ports:
       - ${SQL_PORT}:${SQL_PORT}
+      
+  openldap:
+    image: bitnami/openldap:2
+    ports:
+      - 1389:1389
+    environment:
+      - LDAP_ADMIN_USERNAME=${LDAP_ADMIN_USER}
+      - LDAP_ADMIN_PASSWORD=${LDAP_ADMIN_PASSWORD}
+      - LDAP_USERS=user01,user02
+      - LDAP_PASSWORDS=password1,password2
+    volumes:
+      - openldap_data:/bitnami/openldap
 
 volumes:
   limesurvey:
   postgres_data:
+  openldap_data:
