@@ -1,2 +1,4 @@
 .*
 !.gitignore
+ldapdata/slapd/config/*
+ldapdata/slapd/database/*

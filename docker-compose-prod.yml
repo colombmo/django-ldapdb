@@ -7,11 +7,11 @@ services:
       context: ./app
       dockerfile: Dockerfile.prod
     restart: unless-stopped
-    command: gunicorn django_app.wsgi:application --bind 0.0.0.0:8000
+    command: gunicorn django_app.wsgi:application --bind 0.0.0.0:${DJANGO_PORT}
     volumes:
       - static_volume:/home/app/web/staticfiles
     expose:
-      - 8000:8000
+      - ${DJANGO_PORT}:${DJANGO_PORT}
     env_file:
       - ./.env.prod
     depends_on:
@@ -19,7 +19,7 @@ services:
       - limesurvey
       - openldap
 
-  # Limesurvey server TODO: REMOVE ADMIN PASSWORD!!
+  # Limesurvey server
   limesurvey:
     # image: docker.io/martialblog/limesurvey:latest
     build:
@@ -33,15 +33,14 @@ services:
       - DB_PASSWORD=${SQL_PASSWORD}
       - DB_NAME=${SQL_DATABASE}
       - DB_USERNAME=${SQL_USER}
-      - ADMIN_USER=admin
+      - ADMIN_USER=${LS_ADMIN_USER}
       - ADMIN_NAME=Admin
-      - ADMIN_PASSWORD=example
-      - ADMIN_EMAIL=admin@example.com
-      - PUBLIC_URL=foobar.com
+      - ADMIN_PASSWORD=${LS_ADMIN_PASSWORD}
+      - ADMIN_EMAIL=${LS_ADMIN_EMAIL}
     volumes:
       - limesurvey:/var/www/html/upload/surveys
     expose:
-      - 8080:8080
+      - ${LIME_PORT}:${LIME_PORT}
     depends_on:
       - db
       - openldap
@@ -57,20 +56,26 @@ services:
       - POSTGRES_DB=${SQL_DATABASE}
       - POSTGRES_PASSWORD=${SQL_PASSWORD}
     expose:
-      - 5432:5432
+      - ${SQL_PORT}:${SQL_PORT}
   
-  # Open LDAP for login    
+  # Open LDAP for login
   openldap:
-    image: bitnami/openldap:2
-    expose:
-      - 1389:1389
-    environment:
+    image: osixia/openldap:latest
+    volumes:
+      - ./ldapdata/slapd/database:/var/lib/ldap
+      - ./ldapdata/slapd/config:/etc/ldap/slapd.d
+    environment: 
+      - LDAP_ORGANISATION=swice
+      - LDAP_DOMAIN=swice.ch
       - LDAP_ADMIN_USERNAME=${LDAP_ADMIN_USER}
       - LDAP_ADMIN_PASSWORD=${LDAP_ADMIN_PASSWORD}
-      - LDAP_USERS=user01,user02
-      - LDAP_PASSWORDS=password1,password2
-    volumes:
-      - openldap_data:/bitnami/openldap
+      - LDAP_BASE_DN=dc=swice,dc=ch
+      - LDAP_READONLY_USER=true
+      - LDAP_READONLY_USER_USERNAME=${LDAP_READONLY_USER}
+      - LDAP_READONLY_USER_PASSWORD=${LDAP_READONLY_PASSWORD}
+      - LDAP_TLS=false
+    expose: 
+      - ${LDAP_PORT}:${LDAP_PORT}
 
   # Caddy server for reverse proxy
   caddy:
@@ -94,7 +99,6 @@ services:
 volumes:
   limesurvey:
   postgres_data:
-  openldap_data:
   static_volume:
   caddy_data:
     external: true

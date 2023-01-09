@@ -29,11 +29,10 @@ services:
       - DB_PASSWORD=${SQL_PASSWORD}
       - DB_NAME=${SQL_DATABASE}
       - DB_USERNAME=${SQL_USER}
-      - ADMIN_USER=admin
+      - ADMIN_USER=${LS_ADMIN_USER}
       - ADMIN_NAME=Admin
-      - ADMIN_PASSWORD=example
-      - ADMIN_EMAIL=admin@example.com
-      - PUBLIC_URL=foobar.com
+      - ADMIN_PASSWORD=${LS_ADMIN_PASSWORD}
+      - ADMIN_EMAIL=${LS_ADMIN_EMAIL}
     volumes:
       - limesurvey:/var/www/html/upload/surveys
     ports:
@@ -53,20 +52,26 @@ services:
       - POSTGRES_PASSWORD=${SQL_PASSWORD}
     ports:
       - ${SQL_PORT}:${SQL_PORT}
-      
+  
   openldap:
-    image: bitnami/openldap:2
-    ports:
-      - 1389:1389
-    environment:
+    image: osixia/openldap:latest
+    ports: 
+      - ${LDAP_PORT}:${LDAP_PORT}
+    volumes:
+      - ./ldapdata/slapd/database:/var/lib/ldap
+      - ./ldapdata/slapd/config:/etc/ldap/slapd.d
+    environment: 
+      - LDAP_ORGANISATION=swice
+      - LDAP_DOMAIN=swice.ch
       - LDAP_ADMIN_USERNAME=${LDAP_ADMIN_USER}
       - LDAP_ADMIN_PASSWORD=${LDAP_ADMIN_PASSWORD}
-      - LDAP_USERS=user01,user02
-      - LDAP_PASSWORDS=password1,password2
-    volumes:
-      - openldap_data:/bitnami/openldap
+      - LDAP_BASE_DN=dc=swice,dc=ch
+      - LDAP_READONLY_USER=true
+      - LDAP_READONLY_USER_USERNAME=${LDAP_READONLY_USER}
+      - LDAP_READONLY_USER_PASSWORD=${LDAP_READONLY_PASSWORD}
+      - LDAP_TLS=false
 
 volumes:
   limesurvey:
   postgres_data:
-  openldap_data:
+  #openldap_data:
