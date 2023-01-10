@@ -5,8 +5,9 @@ from . import views
 app_name = "users"
 
 urlpatterns=[
-    path('',views.index),
+    path('',views.dashboard, name="dashboard"),
     path('dashboard/', views.dashboard, name="dashboard"),
     path('invite/', views.invite, name="invite"),
     path('login/', views.login_request, name="login"),
+    path("logout/", views.logout_request, name= "logout"),
 ]

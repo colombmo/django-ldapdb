@@ -1,8 +1,8 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth import login, authenticate #add this
+from django.contrib.auth import login, authenticate, logout
 from django.contrib import messages
-from django.contrib.auth.forms import AuthenticationForm #add this
+from django.contrib.auth.forms import AuthenticationForm
 from .models import Invitation
 from .forms import InviteForm
 
@@ -71,8 +71,17 @@ def login_request(request):
     else:
       messages.error(request,"Invalid username or password.")
 
+  if request.user.is_authenticated:
+    return redirect("users:dashboard")
+  
   form = AuthenticationForm()
   return render(request=request, template_name="users/login.html", context={"login_form":form})
+
+# Perform a logout
+def logout_request(request):
+	logout(request)
+	messages.info(request, "You have successfully logged out.") 
+	return redirect("users:dashboard")
 
 
 '''
