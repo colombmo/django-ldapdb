@@ -4,6 +4,8 @@ from django.contrib.auth.models import User
 '''
 #   Models for user management
 '''
+# Set user email as unique, to avoid email duplicates
+User._meta.get_field('email')._unique = True
 
 # Invitation sent to someone, with a secret code and an expiration date
 class Invitation(models.Model):
