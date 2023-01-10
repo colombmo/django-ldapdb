@@ -25,7 +25,7 @@ class Experiment(models.Model):
     name = models.CharField(max_length = 255, help_text = "Title of the experiment")
     description = models.TextField(help_text = "Description of the experiment")
     publish = models.BooleanField(help_text = "Select this to make this experiment available to everyone, otherwise it will be accessible only in test mode")
-    created_by = User()
+    created_by = models.ForeignKey(User, null=True, on_delete=models.DO_NOTHING)
     
     ## TODO: Start and end date??
 

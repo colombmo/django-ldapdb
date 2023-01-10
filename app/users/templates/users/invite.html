@@ -1,0 +1,19 @@
+<!--users/templates/users/invite.html-->
+<!-- Send invitation to join to new user through their email address -->
+{% extends 'base.html' %}
+
+{% block content %}
+
+{% load crispy_forms_tags %}  
+
+<div>
+    <h2>Invite new user</h2>
+    <form method="POST">
+        {% csrf_token %}
+        <!-- Include form here -->
+        {{ invite_form|crispy }}                    
+		<button class="btn btn-primary" type="submit">Invite</button>
+    </form>
+</div>
+
+{% endblock %}

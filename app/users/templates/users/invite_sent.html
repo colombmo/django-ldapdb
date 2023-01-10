@@ -1,0 +1,14 @@
+<!--users/templates/users/invite.html-->
+<!-- Send invitation to join to new user through their email address -->
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div>
+    <h2>New user invited</h2>
+    <p>To create a new user in the system, please use the following link (code): 
+        <a href="#">{{ invite_code }}</a> 
+    </p>
+</div>
+
+{% endblock %}
