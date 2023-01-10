@@ -6,8 +6,16 @@
 
 <div>
     <h2>New user invited</h2>
-    <p>To create a new user in the system, please use the following link (code): 
-        <a href="#">{{ invite_code }}</a> 
+    <p>To create a new user in the system, please use the following link: 
+        <a href="{% url 'users:register' invite_code %}">
+            http://localhost:8000{% url 'users:register' invite_code %}
+        </a>
+    </p>
+    <p>
+        Or go to the link 
+        <a href="{% url 'users:register' %}">
+            http://localhost:8000{% url 'users:register' %}
+        </a> and insert the code <b>{{ invite_code }}</b>
     </p>
 </div>
 

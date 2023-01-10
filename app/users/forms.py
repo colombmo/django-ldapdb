@@ -7,6 +7,8 @@ from django.core.exceptions import ValidationError
 class InviteForm(forms.Form):
     email_address = forms.EmailField(max_length=150)
 
+class CodeCheckForm(forms.Form):
+    invite_code = forms.CharField(max_length=30)
 
 class NewUserForm(UserCreationForm):
     email = forms.EmailField(required = True, widget=forms.EmailInput(attrs={'class': 'validate',}))

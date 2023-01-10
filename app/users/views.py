@@ -4,7 +4,7 @@ from django.contrib.auth import login, authenticate, logout
 from django.contrib import messages
 from django.contrib.auth.forms import AuthenticationForm
 from .models import Invitation
-from .forms import InviteForm, NewUserForm
+from .forms import InviteForm, NewUserForm, CodeCheckForm
 
 import random
 import string
@@ -39,7 +39,7 @@ def invite(request):
       if not created:
         inv.sent_by = request.user
         inv.code = code
-
+        
       inv.save()
 
       # TODO: Send email with invitation code
@@ -86,7 +86,18 @@ def logout_request(request):
 
 # Register user if they have the right invite code
 def register_request(request, code = ""):
-  if request.user.is_authenticated or len(code) < 10 or not check_invite(request, code):
+  # If empty code, show an interface to manually input it
+  if code == "" or not check_invite(request, code):
+    form = CodeCheckForm()
+    if request.method == "POST":
+      form = CodeCheckForm(request.POST)
+      if form.is_valid():
+        new_code = form.cleaned_data.get('invite_code')
+        return redirect("users:register", code = new_code)
+    
+    return render(request=request, template_name="users/register.html", context={"register_form": form})
+
+  if request.user.is_authenticated:
     return redirect("users:dashboard")
 
   if request.method == "POST":
@@ -100,7 +111,7 @@ def register_request(request, code = ""):
       # Set invite as already used
       check_invite(request, code, setAsUsed=True)
 
-      return redirect("users:login")
+      return redirect("users:dashboard")
     messages.error(request, "Registration unsuccessful. Correct the following errors:")
   else:
     form = NewUserForm()
