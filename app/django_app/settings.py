@@ -12,6 +12,8 @@ https://docs.djangoproject.com/en/4.1/ref/settings/
 
 from pathlib import Path
 import os
+import ldap
+from django_auth_ldap.config import LDAPSearch, GroupOfNamesType
 from django.contrib.messages import constants as messages
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -79,15 +81,6 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'django_app.wsgi.application'
 
-# Authentication backend to handle LDAP authetication
-# https://django-auth-ldap.readthedocs.io/en/latest/install.html
-
-AUTHENTICATION_BACKENDS = [
-    "django_auth_ldap.backend.LDAPBackend",
-    "django.contrib.auth.backends.ModelBackend",
-]
-
-
 # Database
 # https://docs.djangoproject.com/en/4.1/ref/settings/#databases
 
@@ -153,3 +146,59 @@ MESSAGE_TAGS = {
         messages.WARNING: 'alert-warning',
         messages.ERROR: 'alert-danger',
  }
+
+
+# LDAP Configuration
+# Baseline configuration.
+AUTH_LDAP_SERVER_URI = "ldap://openldap:389"
+
+AUTH_LDAP_BIND_DN = f"cn={os.environ.get('LDAP_READONLY_USER')},dc=swice,dc=ch"
+AUTH_LDAP_BIND_PASSWORD = os.environ.get('LDAP_READONLY_PASSWORD')
+AUTH_LDAP_USER_SEARCH = LDAPSearch(
+    "ou=users,dc=swice,dc=ch", ldap.SCOPE_SUBTREE, "(uid=%(user)s)"
+)
+# Or:
+# AUTH_LDAP_USER_DN_TEMPLATE = 'uid=%(user)s,ou=users,dc=example,dc=com'
+
+# Set up the basic group parameters.
+#AUTH_LDAP_GROUP_SEARCH = LDAPSearch(
+#    "ou=users,dc=example,dc=com",
+#    ldap.SCOPE_SUBTREE,
+#    "(objectClass=groupOfNames)",
+#)
+#AUTH_LDAP_GROUP_TYPE = GroupOfNamesType(name_attr="cn")
+
+# Simple group restrictions
+#AUTH_LDAP_REQUIRE_GROUP = "cn=enabled,ou=django,ou=groups,dc=example,dc=com"
+#AUTH_LDAP_DENY_GROUP = "cn=disabled,ou=django,ou=groups,dc=example,dc=com"
+
+# Populate the Django user from the LDAP directory.
+AUTH_LDAP_USER_ATTR_MAP = {
+    "first_name": "givenName",
+    "last_name": "sn",
+    "email": "mail",
+}
+
+#AUTH_LDAP_USER_FLAGS_BY_GROUP = {
+#    "is_active": "cn=active,ou=django,ou=groups,dc=example,dc=com",
+#    "is_staff": "cn=staff,ou=users,dc=swice,dc=ch",
+#    "is_superuser": "cn=superuser,ou=users,dc=swice,dc=ch",
+#}
+
+# This is the default
+AUTH_LDAP_ALWAYS_UPDATE_USER = True
+
+# Use LDAP group membership to calculate group permissions.
+#AUTH_LDAP_FIND_GROUP_PERMS = True
+
+# Cache distinguished names and group memberships for an hour to minimize
+# LDAP traffic.
+AUTH_LDAP_CACHE_TIMEOUT = 3600
+
+# Authentication backend to handle LDAP authetication
+# https://django-auth-ldap.readthedocs.io/en/latest/install.html
+
+AUTHENTICATION_BACKENDS = [
+    "django_auth_ldap.backend.LDAPBackend",
+    "django.contrib.auth.backends.ModelBackend",
+]
