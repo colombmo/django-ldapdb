@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     'crispy_forms',
 ]
 
+# Style forms with bootstrap
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
 
 MIDDLEWARE = [
@@ -77,6 +78,14 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'django_app.wsgi.application'
+
+# Authentication backend to handle LDAP authetication
+# https://django-auth-ldap.readthedocs.io/en/latest/install.html
+
+AUTHENTICATION_BACKENDS = [
+    "django_auth_ldap.backend.LDAPBackend",
+    "django.contrib.auth.backends.ModelBackend",
+]
 
 
 # Database
