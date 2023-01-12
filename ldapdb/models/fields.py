@@ -5,9 +5,9 @@
 import datetime
 import re
 
-import hashlib
-import os
-import base64
+#import hashlib
+#import os
+#import base64
 
 from django.db.models import fields, lookups
 from django.utils import timezone
@@ -413,11 +413,13 @@ class PasswordField(CharField):
         defaults.update(kwargs)
         super(fields.CharField, self).__init__(*args, **defaults)
 
+    '''
     def get_db_prep_save(self, value, connection):
         salt = os.urandom(4)
-        h = hashlib.sha1(str(value).encode(connection.charset))
+        h = hashlib.md5(str(value).encode(connection.charset))
         h.update(salt)
         return super(PasswordField, self).get_db_prep_save(
             '{SSHA}' + base64.b64encode(h.digest() + salt).strip().decode(connection.charset),
             connection
         )
+    '''
