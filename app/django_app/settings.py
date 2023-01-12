@@ -170,7 +170,7 @@ AUTH_LDAP_GROUP_TYPE = GroupOfNamesType(name_attr="cn")
 
 # Simple group restrictions
 AUTH_LDAP_REQUIRE_GROUP = "cn=enabled,ou=groups,dc=swice,dc=ch"
-AUTH_LDAP_DENY_GROUP = "cn=disabled,ou=groups,dc=swice,dc=ch"
+#AUTH_LDAP_DENY_GROUP = "cn=disabled,ou=groups,dc=swice,dc=ch"
 
 # Populate the Django user from the LDAP directory.
 AUTH_LDAP_USER_ATTR_MAP = {
