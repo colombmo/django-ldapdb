@@ -4,4 +4,4 @@ psycopg2-binary==2.9.5
 django-crispy-forms==1.14.0
 python-ldap==3.4.3
 django-auth-ldap==4.1.0
-git+https://github.com/colombmo/django-ldapdb@f182599#django-ldapbd
+git+https://github.com/colombmo/django-ldapdb@1d7466c#django-ldapbd

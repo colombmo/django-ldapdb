@@ -110,6 +110,9 @@ def register_request(request, code = ""):
       first_name = form.cleaned_data.get("first_name")
       last_name = form.cleaned_data.get("last_name")
 
+      print(password)
+
+      # Random non-existing uidNumber
       user = LdapUser.objects.create(sn = username, cn = username, uid = username, email = email, first_name = first_name, last_name = last_name, password = password)
       try:
         group = LdapGroup.objects.get(name = "enabled") # Automatically set user as active
