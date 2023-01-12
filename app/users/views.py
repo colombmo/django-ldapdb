@@ -3,19 +3,16 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth import login, authenticate, logout
 from django.contrib import messages
 from django.contrib.auth.forms import AuthenticationForm
-from .models import Invitation, LdapGroup
+from .models import Invitation, LdapGroup, LdapUser
 from .forms import InviteForm, NewUserForm, CodeCheckForm
-
-import random
-import string
-from datetime import datetime, timedelta
+from .helpers import check_invite, get_random_string
 
 from django.http import HttpResponse
 
  
 # Test view
 def test(request):
-  grp = list(LdapGroup.objects.all())
+  grp = list(LdapUser.objects.all())
   res = [str(g) for g in grp]
   return HttpResponse("Hello "+str(res))
 
@@ -118,33 +115,3 @@ def register_request(request, code = ""):
     form = NewUserForm()
 
   return render(request=request, template_name="users/register.html", context={"register_form": form})
-
-'''
-# Helpers
-'''
-
-# Get random password of length "length" with letters and digits
-def get_random_string(length):
-  characters = string.ascii_letters + string.digits
-  randstring = ''.join(random.choice(characters) for i in range(length))
-  return randstring
-
-# Check if invite code is valid
-def check_invite(request, code, setAsUsed = False):
-  try:
-    invitation = Invitation.objects.get(
-      code = code, 
-      used = False, 
-      date_created__gte = datetime.now() - timedelta(days = 7)
-    )
-
-    if setAsUsed:
-      invitation.used = True
-      invitation.save()
-
-  except Invitation.DoesNotExist:
-    messages.error(request, """No valid invite to register with this code.
-      Please note that invites are valid only for 7 days.""")
-    return False
-  
-  return True
