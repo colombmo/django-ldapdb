@@ -3,7 +3,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth import login, authenticate, logout
 from django.contrib import messages
 from django.contrib.auth.forms import AuthenticationForm
-from .models import Invitation
+from .models import Invitation, LdapGroup
 from .forms import InviteForm, NewUserForm, CodeCheckForm
 
 import random
@@ -15,7 +15,8 @@ from django.http import HttpResponse
  
 # Test view
 def index(request):
-  return HttpResponse("Hello Geeks")
+  grp = list(LdapGroup.objects.all())
+  return HttpResponse("Hello Geeks"+str(grp))
 
 
 # Dashboard for user management

@@ -85,6 +85,12 @@ WSGI_APPLICATION = 'django_app.wsgi.application'
 # https://docs.djangoproject.com/en/4.1/ref/settings/#databases
 
 DATABASES = {
+    'ldap': {
+        'ENGINE': 'ldapdb.backends.ldap',
+        'NAME': f'ldap://openldap:{os.environ.get("LDAP_PORT")}',
+        'USER': f'cn={os.environ.get("LDAP_ADMIN_USER")},dc=swice,dc=password',
+        'PASSWORD': os.environ.get("LDAP_ADMIN_PASSWORD"),
+     },
     "default": {
         "ENGINE": os.environ.get("SQL_ENGINE", "django.db.backends.sqlite3"),
         "NAME": os.environ.get("SQL_DATABASE", BASE_DIR / "db.sqlite3"),
@@ -94,6 +100,8 @@ DATABASES = {
         "PORT": os.environ.get("SQL_PORT", "5432"),
     }
 }
+
+DATABASE_ROUTERS = ['ldapdb.router.Router'] # Database router for LDAP
 
 
 # Password validation
