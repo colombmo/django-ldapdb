@@ -2,3 +2,6 @@
 !.gitignore
 ldapdata/slapd/config/*
 ldapdata/slapd/database/*
+
+export.ldif
+lime_config.png

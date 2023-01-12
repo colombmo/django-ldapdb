@@ -161,12 +161,12 @@ AUTH_LDAP_USER_SEARCH = LDAPSearch(
 # AUTH_LDAP_USER_DN_TEMPLATE = 'uid=%(user)s,ou=users,dc=example,dc=com'
 
 # Set up the basic group parameters.
-#AUTH_LDAP_GROUP_SEARCH = LDAPSearch(
-#    "ou=users,dc=example,dc=com",
-#    ldap.SCOPE_SUBTREE,
-#    "(objectClass=groupOfNames)",
-#)
-#AUTH_LDAP_GROUP_TYPE = GroupOfNamesType(name_attr="cn")
+AUTH_LDAP_GROUP_SEARCH = LDAPSearch(
+    "ou=users,dc=swice,dc=ch",
+    ldap.SCOPE_SUBTREE,
+    "(objectClass=groupOfNames)",
+)
+AUTH_LDAP_GROUP_TYPE = GroupOfNamesType(name_attr="cn")
 
 # Simple group restrictions
 #AUTH_LDAP_REQUIRE_GROUP = "cn=enabled,ou=django,ou=groups,dc=example,dc=com"
@@ -174,16 +174,16 @@ AUTH_LDAP_USER_SEARCH = LDAPSearch(
 
 # Populate the Django user from the LDAP directory.
 AUTH_LDAP_USER_ATTR_MAP = {
-    "first_name": "givenName",
-    "last_name": "sn",
+    "first_name": "displayName",
+    "last_name": "givenName",
     "email": "mail",
 }
 
-#AUTH_LDAP_USER_FLAGS_BY_GROUP = {
+AUTH_LDAP_USER_FLAGS_BY_GROUP = {
 #    "is_active": "cn=active,ou=django,ou=groups,dc=example,dc=com",
-#    "is_staff": "cn=staff,ou=users,dc=swice,dc=ch",
-#    "is_superuser": "cn=superuser,ou=users,dc=swice,dc=ch",
-#}
+    "is_staff": "cn=staff,ou=groups,dc=swice,dc=ch",
+    "is_superuser": "cn=superuser,ou=groups,dc=swice,dc=ch",
+}
 
 # This is the default
 AUTH_LDAP_ALWAYS_UPDATE_USER = True
