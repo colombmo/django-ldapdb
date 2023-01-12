@@ -25,14 +25,15 @@ class LdapUser(ldapdb.models.Model):
     """
     # LDAP meta-data
     base_dn = "ou=users,dc=swice,dc=ch"
-    object_classes = ["person"]
+    object_classes = ["person", "organizationalPerson", "inetOrgPerson"]
 
     # person attributes
     sn = CharField(db_column="sn", unique=True, max_length=200)
     cn = CharField(db_column="cn", max_length=200, primary_key=True)
     uid = CharField(db_column="uid", unique=True, max_length=200)
-    firstName = CharField(db_column="displayName", max_length=200, null=True)
-    lastName = CharField(db_column="givenName", max_length=200, null=True)
+    email = CharField(db_column="mail", unique=True, max_length=200)
+    first_name = CharField(db_column="displayName", max_length=200, null=True)
+    last_name = CharField(db_column="givenName", max_length=200, null=True)
     password = PasswordField()
     
 
