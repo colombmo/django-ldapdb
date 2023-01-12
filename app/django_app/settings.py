@@ -88,7 +88,7 @@ DATABASES = {
     'ldap': {
         'ENGINE': 'ldapdb.backends.ldap',
         'NAME': f'ldap://openldap:{os.environ.get("LDAP_PORT")}',
-        'USER': f'cn={os.environ.get("LDAP_ADMIN_USER")},dc=swice,dc=password',
+        'USER': f'cn={os.environ.get("LDAP_ADMIN_USER")},dc=swice,dc=ch',
         'PASSWORD': os.environ.get("LDAP_ADMIN_PASSWORD"),
      },
     "default": {

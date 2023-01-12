@@ -14,9 +14,10 @@ from django.http import HttpResponse
 
  
 # Test view
-def index(request):
+def test(request):
   grp = list(LdapGroup.objects.all())
-  return HttpResponse("Hello Geeks"+str(grp))
+  res = [str(g) for g in grp]
+  return HttpResponse("Hello "+str(res))
 
 
 # Dashboard for user management

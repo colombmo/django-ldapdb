@@ -10,7 +10,7 @@ class LdapGroup(ldapdb.models.Model):
     object_classes = ["groupOfNames"]
 
     # posixGroup attributes
-    gid = IntegerField(db_column="entryUUID", unique=True)
+    gid = CharField(db_column="entryUUID", unique=True, max_length=50)
     name = CharField(db_column="cn", max_length=200, primary_key=True)
     members = ListField(db_column="member")
 
