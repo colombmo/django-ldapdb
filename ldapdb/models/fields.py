@@ -411,7 +411,7 @@ class PasswordField(CharField):
                     'db_column': 'userPassword',
                     'max_length': 128}
         defaults.update(kwargs)
-        super(fields.CharField, self).__init__(*args, **defaults)
+        super(fields.CharField, self).__init__(*args, db_collation, **defaults)
 
     def get_db_prep_save(self, value, connection):
         salt = os.urandom(8)
