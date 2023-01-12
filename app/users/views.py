@@ -53,8 +53,7 @@ def invite(request):
   form = InviteForm()
   return render(request, "users/invite.html", context={"invite_form" : form})
 
-# Perform a login using django internal system
-# TODO: To be changed for LDAP login
+# Perform a login using LDAP
 def login_request(request):
   if request.user.is_authenticated:
     return redirect("users:dashboard")
