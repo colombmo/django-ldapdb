@@ -169,8 +169,8 @@ AUTH_LDAP_GROUP_SEARCH = LDAPSearch(
 AUTH_LDAP_GROUP_TYPE = GroupOfNamesType(name_attr="cn")
 
 # Simple group restrictions
-#AUTH_LDAP_REQUIRE_GROUP = "cn=enabled,ou=django,ou=groups,dc=example,dc=com"
-#AUTH_LDAP_DENY_GROUP = "cn=disabled,ou=django,ou=groups,dc=example,dc=com"
+AUTH_LDAP_REQUIRE_GROUP = "cn=enabled,ou=groups,dc=swice,dc=ch"
+AUTH_LDAP_DENY_GROUP = "cn=disabled,ou=groups,dc=swice,dc=ch"
 
 # Populate the Django user from the LDAP directory.
 AUTH_LDAP_USER_ATTR_MAP = {
@@ -180,7 +180,7 @@ AUTH_LDAP_USER_ATTR_MAP = {
 }
 
 AUTH_LDAP_USER_FLAGS_BY_GROUP = {
-#    "is_active": "cn=active,ou=django,ou=groups,dc=example,dc=com",
+    "is_active": "cn=enabled,ou=groups,dc=swice,dc=ch",
     "is_staff": "cn=staff,ou=groups,dc=swice,dc=ch",
     "is_superuser": "cn=superuser,ou=groups,dc=swice,dc=ch",
 }
@@ -189,7 +189,7 @@ AUTH_LDAP_USER_FLAGS_BY_GROUP = {
 AUTH_LDAP_ALWAYS_UPDATE_USER = True
 
 # Use LDAP group membership to calculate group permissions.
-#AUTH_LDAP_FIND_GROUP_PERMS = True
+AUTH_LDAP_FIND_GROUP_PERMS = True
 
 # Cache distinguished names and group memberships for an hour to minimize
 # LDAP traffic.
