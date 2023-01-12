@@ -414,7 +414,7 @@ class PasswordField(CharField):
         super(fields.CharField, self).__init__(*args, **defaults)
 
     def get_db_prep_save(self, value, connection):
-        salt = os.urandom(16)
+        salt = os.urandom(8)
         h = hashlib.sha1(str(value).encode(connection.charset))
         h.update(salt)
         return super(PasswordField, self).get_db_prep_save(
