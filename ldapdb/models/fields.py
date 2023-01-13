@@ -145,10 +145,10 @@ class LdapFieldMixin(object):
 
 
 class CharField(LdapFieldMixin, fields.CharField):
-    def __init__(self, *args, **kwargs):
+    def __init__(self, *args, db_collation = None, **kwargs):
         defaults = {'max_length': 200}
         defaults.update(kwargs)
-        super().__init__(*args, **defaults)
+        super().__init__(*args, db_collation, **defaults)
 
     def from_ldap(self, value, connection):
         if len(value) == 0:
