@@ -146,6 +146,8 @@ STATIC_ROOT = BASE_DIR / "staticfiles"
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
+# Login URL where to send people when login is required to access a certain resource
+LOGIN_URL="users:login"
 
 
 MESSAGE_TAGS = {
