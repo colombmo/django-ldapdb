@@ -402,16 +402,16 @@ TimestampField.register_lookup(InLookup)
 
 
 # Taken from https://github.com/g1itch/django-ldapdb/blob/password-field/ldapdb/models/fields.py
-class PasswordField(CharField):
+class PasswordField(fields.CharField):
     """
     Field which encodes password like slappasswd
     """
-    def __init__(self, *args, db_collation=None, **kwargs):
+    def __init__(self, *args, **kwargs):
         defaults = {'blank': True,
                     'db_column': 'userPassword',
                     'max_length': 128}
         defaults.update(kwargs)
-        super(fields.CharField, self).__init__(*args, db_collation, **defaults)
+        super(fields.CharField, self).__init__(*args, **defaults)
 
     def get_db_prep_save(self, value, connection):
         salt = os.urandom(8)
