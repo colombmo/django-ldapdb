@@ -105,15 +105,14 @@ def register_request(request, code = ""):
     if form.is_valid():
       # Save user in LDAP system
       username = form.cleaned_data.get("username")
-      password = form.cleaned_data.get("password")
+      password = form.cleaned_data.get("password1")
       email = form.cleaned_data.get("email")
       first_name = form.cleaned_data.get("first_name")
       last_name = form.cleaned_data.get("last_name")
 
-      print(password)
-
       # Random non-existing uidNumber
       user = LdapUser.objects.create(sn = username, cn = username, uid = username, email = email, first_name = first_name, last_name = last_name, password = password)
+
       try:
         group = LdapGroup.objects.get(name = "enabled") # Automatically set user as active
         group.members.append(f"cn={username},ou=users,dc=swice,dc=ch")
